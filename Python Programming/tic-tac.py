@@ -3,7 +3,6 @@ import random
 
 logging.basicConfig(level=logging.INFO)
 
-
 def print_board(board):
     """Prints the tic-tac-toe board with labeled columns.
 
@@ -18,7 +17,6 @@ def print_board(board):
         print(f"{i} | {row[0]} | {row[1]} | {row[2]}")
         if i < 2:
             print("--------------")
-
 
 def check_winner(board, symbol):
     """Checks if a player with the given symbol has won the game.
@@ -47,7 +45,6 @@ def check_winner(board, symbol):
 
     return False
 
-
 def is_board_full(board):
     """Checks if the board is full (stalemate/tie).
 
@@ -59,7 +56,6 @@ def is_board_full(board):
     """
     # Function to check if the board is full (stalemate/tie)
     return all(cell != " " for row in board for cell in row)
-
 
 def get_empty_cells(board):
     """Gets a list of empty cells on the board.
@@ -77,7 +73,6 @@ def get_empty_cells(board):
             if board[row][col] == " ":
                 empty_cells.append((row, col))
     return empty_cells
-
 
 def player_move(board, symbol):
     """Gets and validates the player's move.
@@ -104,12 +99,15 @@ def player_move(board, symbol):
                     board[row][col] = symbol
                     break
                 else:
-                    print("Move canceled.")
+                    if(confirm)=="no".lower():
+                        print("Move canceled.")
+
+                    else:
+                        print("Invalid Choice try again")
             else:
                 logging.warning("Invalid move. Try again.")
         except ValueError:
             logging.warning("Invalid input. Try again.")
-
 
 def computer_move(board, symbol):
     """Makes a random move for the computer.
@@ -123,9 +121,9 @@ def computer_move(board, symbol):
     """
     # Function for the computer to make a random move
     empty_cells = get_empty_cells(board)
-    row, col = random.choice(empty_cells)
-    board[row][col] = symbol
-
+    if empty_cells:
+        row, col = random.choice(empty_cells)
+        board[row][col] = symbol
 
 def choose_player_symbol():
     """Asks the player for their preferred symbol (X or O).
@@ -141,7 +139,6 @@ def choose_player_symbol():
         else:
             print("Invalid choice. Please choose X or O.")
 
-
 def play_game():
     """Plays a game of tic-tac-toe.
 
@@ -152,10 +149,11 @@ def play_game():
     board = [[" " for _ in range(3)] for _ in range(3)]
     player_symbol = choose_player_symbol()
     computer_symbol = "X" if player_symbol == "O" else "O"
-    current_player = player_symbol
+    current_player = "X"  # Always start with 'X'
 
     print(
         f"You are '{player_symbol}' and the computer is '{computer_symbol}'.")
+    print("Player X starts the game.")
 
     while not check_winner(board, player_symbol) and not check_winner(board, computer_symbol) and not is_board_full(board):
         print_board(board)
@@ -173,12 +171,11 @@ def play_game():
     print_board(board)
 
     if check_winner(board, player_symbol):
-        print("Congratulations! Player X wins!")
+        print(f"Congratulations! Player {player_symbol} wins!")
     elif check_winner(board, computer_symbol):
         print("Computer wins!")
     else:
         print("It's a tie!")
-
 
 if __name__ == "__main__":
     play_game()
